@@ -13,7 +13,7 @@ const Lesson = mongoose.model(
         },
         grade: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Grade'
+            ref: 'Class'
         }
 }));
 

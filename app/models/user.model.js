@@ -12,16 +12,17 @@ const User = mongoose.model(
             type: String,
             required: true
         },
-        grade: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Grade",
-        },
         roles: [
             {
                 type: String,
                 ref: "Role"
             }
-        ]
+        ],
+        class: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Class",
+        },
+
     }, {timestamps: true})
 );
 

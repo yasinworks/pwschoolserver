@@ -5,7 +5,7 @@ export const checkAuth = (req, res, next) => {
         next()
     }
 
-    const token = req.headers.authorization.split(' ')[1];
+    const token = req.headers.authorization;
 
     if (!token) {
         return res.status(403).json({message: 'Not authorized'})
@@ -13,7 +13,7 @@ export const checkAuth = (req, res, next) => {
 
 
     try {
-        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET);
 
         req.user = decoded;
 

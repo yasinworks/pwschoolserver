@@ -4,6 +4,7 @@ import cookieSession from 'cookie-session';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoute from './app/routes/auth.route.js';
+import classRoute from './app/routes/class.route.js';
 dotenv.config();
 
 //VARIABLES
@@ -23,10 +24,6 @@ mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster1.xjfregt.mongo
     .catch((err) => console.log("DB error: \n", err));
 
 
-
-
-
-
 // MIDDLEWARES
 
 app.use(cors());
@@ -44,7 +41,7 @@ app.use(
 //ROUTES
 
 app.use('/api/auth', authRoute);
-
+app.use('/api/classes', classRoute);
 
 
 
