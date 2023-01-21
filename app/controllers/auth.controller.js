@@ -1,10 +1,28 @@
 import User from '../models/user.model.js';
+import Role from '../models/role.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import {validationResult} from "express-validator";
+
+//JWT GENERATOR
+const generateAccessToken = (id, roles) => {
+    const payload = {
+        id,
+        roles
+    }
+
+    return jwt.sign(payload, process.env.JWT_SECRET, {expiresIn: '24h'})
+}
 
 //REGISTER
 export const register = async (req, res) => {
     try {
+        const errors = validationResult(req);
+
+        if(!errors.isEmpty()) {
+            return res.status(400).json({message: "Error while registering", errors})
+        }
+
         const {username, password} = req.body;
         const isUsed = await User.findOne({username});
 
@@ -16,10 +34,12 @@ export const register = async (req, res) => {
 
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
+        const userRole = await Role.findOne({name:"STUDENT"});
 
         const newUser = new User({
             username,
-            password: hash
+            password: hash,
+            roles: [userRole.name]
         });
 
         await newUser.save();
@@ -29,7 +49,7 @@ export const register = async (req, res) => {
         });
 
     } catch (err) {
-        res.json({message: err})
+        res.status(400).json({message: err})
     }
 };
 
@@ -40,7 +60,7 @@ export const logIn = async (req, res) => {
         const user = await User.findOne({username});
 
         if (!user) {
-           return res.json({message: 'Username does not exist'})
+           return res.status(400).json({message: 'Username does not exist'})
         }
 
         const isPasswordCorrect = await bcrypt.compare(password, user.password)
@@ -51,11 +71,7 @@ export const logIn = async (req, res) => {
             })
         }
 
-        const token = jwt.sign({
-            id: user._id,
-        }, process.env.JWT_SECRET,
-            {expiresIn: '30d'}
-        );
+        const token = generateAccessToken(user._id, user.roles);
 
         res.json({
             user,
@@ -64,37 +80,36 @@ export const logIn = async (req, res) => {
         })
 
     } catch (err) {
-        res.json({message: err})
+        res.status(400).json({message: err})
     }
 };
 
 //GET ME
 export const getMe = async (req, res) => {
     try {
-        const user = await User.findById(req.userID);
-
+        const user = await User.findById(req.user.id);
         if (!user) {
             return res.json({message: 'User does not exist'});
         }
 
-        const token = jwt.sign({
-                id: user._id,
-            }, process.env.JWT_SECRET, {expiresIn: '30d'});
+        const token = generateAccessToken(user._id, user.roles)
 
         res.json({
             user,
             token
         })
     } catch (err) {
-        console.log(err)
+        res.json(err)
     }
 };
 
-//LOG OUT
-export const logOut = async () => {
+//GET ALL USERS
+export const getAll = async (req, res) => {
     try {
+        const users = await User.find();
 
+        res.json(users)
     } catch (err) {
-        console.log(err)
+        res.json({message: err})
     }
 }

@@ -3,8 +3,13 @@ import mongoose from 'mongoose';
 const Role = mongoose.model(
     "Role",
     new mongoose.Schema({
-        name: String
+        name: {
+            type: String,
+            unique: true,
+            required: true,
+            default: "STUDENT"
+        }
     })
 );
 
-module.exports = Role;
+export default Role;
