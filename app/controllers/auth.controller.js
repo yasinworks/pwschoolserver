@@ -1,5 +1,6 @@
 import User from '../models/user.model.js';
 import Role from '../models/role.model.js';
+import Class from "../models/class.model.js";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import {validationResult} from "express-validator";
@@ -23,7 +24,7 @@ export const register = async (req, res) => {
             return res.status(400).json({message: "Error while registering", errors})
         }
 
-        const {username, password} = req.body;
+        const {username, className, password} = req.body;
         const isUsed = await User.findOne({username});
 
         if (isUsed) {
@@ -35,11 +36,13 @@ export const register = async (req, res) => {
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
         const userRole = await Role.findOne({name:"STUDENT"});
+        const classId = await Class.findOne({name: className})
 
         const newUser = new User({
             username,
             password: hash,
-            roles: [userRole.name]
+            roles: [userRole.name],
+            classId: classId._id
         });
 
         await newUser.save();
@@ -49,7 +52,7 @@ export const register = async (req, res) => {
         });
 
     } catch (err) {
-        res.status(400).json({message: err})
+        res.status(400).json({message: "Error while registering"})
     }
 };
 
