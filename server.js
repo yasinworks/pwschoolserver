@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoute from './app/routes/auth.route.js';
 import classRoute from './app/routes/class.route.js';
+import lessonRoute from './app/routes/lesson.route.js';
 dotenv.config();
 
 //VARIABLES
@@ -25,7 +26,6 @@ mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster1.xjfregt.mongo
 
 
 // MIDDLEWARES
-
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,14 +39,13 @@ app.use(
 );
 
 //ROUTES
-
 app.use('/api/auth', authRoute);
 app.use('/api/classes', classRoute);
+app.use('/api/lessons', lessonRoute);
 
 
 
 //START SERVER
-
 app.listen(PORT, (err) => {
     if (err) (console.log(err));
     else {console.log(`Server is listening on port ${PORT}`)}

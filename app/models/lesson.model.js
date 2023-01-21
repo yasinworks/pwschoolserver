@@ -11,10 +11,14 @@ const Lesson = mongoose.model(
             type: String,
             required: true
         },
-        grade: {
+        date: {
+            type: String
+        },
+        classId: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: 'Class'
+            ref: 'Class',
+            required: true
         }
-}));
+}, {timestamps: true}));
 
 export default Lesson;
