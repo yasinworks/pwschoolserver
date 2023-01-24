@@ -35,15 +35,19 @@ export const register = async (req, res) => {
 
         const salt = bcrypt.genSaltSync(10);
         const hash = bcrypt.hashSync(password, salt);
-        const userRole = await Role.findOne({name:"STUDENT"});
-        const classId = await Class.findOne({name: className})
+        const userRole = await Role.findOne({name:"TEACHER"});
+        const classId = await Class.findOne({name: className});
 
-        const newUser = new User({
+        const newUser = classId ? new User({
             username,
             password: hash,
             roles: [userRole.name],
             classId: classId._id
-        });
+        }) : new User({
+            username,
+            password: hash,
+            roles: [userRole.name],
+        })
 
         await newUser.save();
 
@@ -52,7 +56,7 @@ export const register = async (req, res) => {
         });
 
     } catch (err) {
-        res.status(400).json({message: "Error while registering"})
+        res.status(400).json({message: "Error while registering", error: err})
     }
 };
 
