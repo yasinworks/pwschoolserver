@@ -1,10 +1,20 @@
-#School server DOCS
+# School server documentation
 
-###[Structure]
- - Account 
-   - Admin
-   - Teacher 
-   - Student  
- - Grade
-    - Lessons by date
+---
+
+### Structure
+- User
+   - Username (String)
+   - Password (Hash)
+   - Roles
+     - Name (String)
+   - ClassId (ObjectId)
+- Class
+    - Name (String)
+- Lesson 
+   - Title (String)
+   - Text (String)
+   - Date (String, format yyyy-mm-dd)  
+   - ClassId (ObjectId)
     
+---
