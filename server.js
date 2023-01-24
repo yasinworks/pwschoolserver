@@ -4,6 +4,7 @@ import cookieSession from 'cookie-session';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoute from './app/routes/auth.route.js';
+import userRoute from './app/routes/user.route.js';
 import classRoute from './app/routes/class.route.js';
 import lessonRoute from './app/routes/lesson.route.js';
 dotenv.config();
@@ -40,6 +41,7 @@ app.use(
 
 //ROUTES
 app.use('/api/auth', authRoute);
+app.use('/api/users', userRoute);
 app.use('/api/classes', classRoute);
 app.use('/api/lessons', lessonRoute);
 

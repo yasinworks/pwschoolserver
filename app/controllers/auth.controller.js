@@ -90,33 +90,3 @@ export const logIn = async (req, res) => {
         res.status(400).json({message: err})
     }
 };
-
-//GET ME
-export const getMe = async (req, res) => {
-    try {
-        const user = await User.findById(req.user.id);
-        if (!user) {
-            return res.json({message: 'User does not exist'});
-        }
-
-        const token = generateAccessToken(user._id, user.roles)
-
-        res.json({
-            user,
-            token
-        })
-    } catch (err) {
-        res.json(err)
-    }
-};
-
-//GET ALL USERS
-export const getAll = async (req, res) => {
-    try {
-        const users = await User.find();
-
-        res.json(users)
-    } catch (err) {
-        res.json({message: err})
-    }
-}
