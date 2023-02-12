@@ -1,7 +1,5 @@
 # School server documentation
 
----
-
 ### Structure
 - User
    - Username (String)
@@ -11,10 +9,11 @@
    - ClassId (ObjectId)
 - Class
     - Name (String)
+    - Lessons ID (Array of ObjectId)
+    - Access Code (optional, hash)
 - Lesson 
    - Title (String)
    - Text (String)
-   - Date (String, format yyyy-mm-dd)  
-   - ClassId (ObjectId)
+   - Date (String, format yyyy-mm-dd)
     
 ---
