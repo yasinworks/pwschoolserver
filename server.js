@@ -21,6 +21,7 @@ const DB_NAME = process.env.DB_NAME;
 
 
 //CONNECT DB
+mongoose.set('strictQuery', true);
 mongoose.connect(`mongodb+srv://${DB_USER}:${DB_PASSWORD}@cluster1.xjfregt.mongodb.net/${DB_NAME}?retryWrites=true&w=majority`)
     .then(() => console.log("DB connected"))
     .catch((err) => console.log("DB error: \n", err));
@@ -44,6 +45,9 @@ app.use('/api/auth', authRoute);
 app.use('/api/users', userRoute);
 app.use('/api/classes', classRoute);
 app.use('/api/lessons', lessonRoute);
+// app.use((req, res, next) => {
+//     res.status(404).send('404')
+// })
 
 
 

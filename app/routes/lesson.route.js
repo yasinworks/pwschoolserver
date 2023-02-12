@@ -13,12 +13,8 @@ router.post('/create', checkAuth, checkRole(['TEACHER']), createLesson);
 router.delete('/delete', checkAuth, checkRole(['TEACHER']), deleteLesson)
 
 //GET BY CLASS
-router.get('/class', checkAuth, checkClass, getLessonsByClass)
-
-
-// router.get('/class/:ID', checkAuth, checkRole(['TEACHER']), getLessonsByClass)
-
-
+// router.get('/class', checkAuth, checkClass, getLessonsByClass)
+router.get('/class', getLessonsByClass)
 
 //GET ALL
 router.get('/', checkAuth, checkRole(['TEACHER']), getAll);

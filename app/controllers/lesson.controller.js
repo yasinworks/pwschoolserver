@@ -1,31 +1,28 @@
 import Lesson from "../models/lesson.model.js";
 import Class from "../models/class.model.js";
+import bcrypt from "bcryptjs";
 
 //CREATE
 export const createLesson = async (req, res) => {
     try {
         const {title, text, date, className} = req.body;
         const classId = await Class.findOne({name: className});
-        const isUsed = await Lesson.findOne({title, classId});
-
-        if (isUsed) {
-            return res.status(402).json({message: "Lesson with same title already exist"});
-        }
-
-
 
         const newLesson = new Lesson({
             title,
             text,
-            date,
-            classId: classId._id
+            date
         });
 
         await newLesson.save();
 
+        const update = {lessons: [...classId.lessons, newLesson._id]};
+        await classId.updateOne(update);
+
         res.json({newLesson, message: "Lesson created successfully"});
 
     } catch (err) {
+        console.log(err)
         res.json({message: 'Error while creating this lesson'})
     }
 }
@@ -52,15 +49,37 @@ export const deleteLesson = async (req, res) => {
 //GET BY CLASS
 export const getLessonsByClass = async (req, res) => {
     try {
-        const {ID} = req.query;
-        const lessons = await Lesson.find({classId: ID});
+        const {ID, accessCode} = req.query;
+        const classL = await Class.findById(ID);
+        const classAccessCode = classL.accessCode
+        const lessonsId = classL.lessons
+        let lessons = []
 
-        if (!lessons) {
-            return res.status(402).json("No lessons in this class")
+
+        const isAccessCodeCorrect = await bcrypt.compare(accessCode, classAccessCode);
+        console.log(accessCode)
+        console.log(classAccessCode)
+        console.log(isAccessCodeCorrect)
+
+        if (!isAccessCodeCorrect && classAccessCode !== 'No access code') {
+            return res.json({message: "Wrong access code"})
         }
 
-        res.json({lessons, message: "Lessons retrieved successfully"})
+
+        if (lessonsId.length === 0) {
+            return res.status(402).json({message: "No lessons in this class"})
+        }
+
+        lessonsId.map(async (lesson) => {
+            console.log("map")
+            lessons = [...lessons, await Lesson.findById(lesson)]
+            if (lessons.length === lessonsId.length) {
+                res.status(200).json({lessons, message: "Lessons retrieved successfully"})
+            }
+        })
+
     } catch (err) {
+        console.log(err)
         res.status(402).json({message: "Error while retrieving lessons", err})
     }
 };
