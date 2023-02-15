@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import cookieSession from 'cookie-session';
+// import cookieSession from 'cookie-session';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoute from './app/routes/auth.route.js';
@@ -32,13 +32,13 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 // app.use(cors(corsOptions));
-app.use(
-    cookieSession({
-        name: "session",
-        secret: "COOKIE_SECRET",
-        httpOnly: true
-    })
-);
+// app.use(
+//     cookieSession({
+//         name: "session",
+//         secret: "COOKIE_SECRET",
+//         httpOnly: true
+//     })
+// );
 
 //ROUTES
 app.use('/api/auth', authRoute);

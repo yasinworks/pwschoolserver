@@ -68,7 +68,6 @@ export const getLessonsByClass = async (req, res) => {
         }
 
         lessonsId.map(async (lesson) => {
-            console.log("map")
             lessons = [...lessons, await Lesson.findById(lesson)]
             if (lessons.length === lessonsId.length) {
                 res.status(200).json({lessons, message: "Lessons retrieved successfully"})
