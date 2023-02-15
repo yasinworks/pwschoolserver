@@ -57,9 +57,6 @@ export const getLessonsByClass = async (req, res) => {
 
 
         const isAccessCodeCorrect = await bcrypt.compare(accessCode, classAccessCode);
-        console.log(accessCode)
-        console.log(classAccessCode)
-        console.log(isAccessCodeCorrect)
 
         if (!isAccessCodeCorrect && classAccessCode !== 'No access code') {
             return res.json({message: "Wrong access code"})
