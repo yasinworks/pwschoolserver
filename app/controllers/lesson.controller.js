@@ -59,12 +59,12 @@ export const getLessonsByClass = async (req, res) => {
         const isAccessCodeCorrect = await bcrypt.compare(accessCode, classAccessCode);
 
         if (!isAccessCodeCorrect && classAccessCode !== 'No access code') {
-            return res.json({message: "Wrong access code"})
+            return res.status(400).json({message: "Wrong access code"})
         }
 
 
         if (lessonsId.length === 0) {
-            return res.status(402).json({message: "No lessons in this class"})
+            return res.status(200).json({lessons, message: "No lessons in this class"})
         }
 
         lessonsId.map(async (lesson) => {
@@ -76,7 +76,7 @@ export const getLessonsByClass = async (req, res) => {
 
     } catch (err) {
         console.log(err)
-        res.status(402).json({message: "Error while retrieving lessons", err})
+        res.status(400).json({message: "Error while retrieving lessons", err})
     }
 };
 
