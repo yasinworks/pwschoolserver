@@ -7,6 +7,15 @@ const Class = mongoose.model(
             type: String,
             required: true,
             unique: true
+        },
+        lessons: [
+            {
+                type: String,
+                ref: "Lesson"
+            }
+        ],
+        accessCode: {
+            type: String
         }
     }, {timestamps: true})
 );

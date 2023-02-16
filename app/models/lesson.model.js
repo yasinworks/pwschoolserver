@@ -13,11 +13,6 @@ const Lesson = mongoose.model(
         },
         date: {
             type: String
-        },
-        classId: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Class',
-            required: true
         }
 }, {timestamps: true}));
 
